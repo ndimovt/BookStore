@@ -7,11 +7,7 @@ public class Book {
     private double price;
     @Override
     public String toString() {
-        return "Book{" +
-                "bookName='" + bookName + '\'' +
-                ", year=" + year +
-                ", price=" + price +
-                '}';
+        return "BookName: " + bookName + ", Year of release: " + year + ", Price: " + price;
     }
     public Book(String bookName, int year, double price) {
         this.bookName = bookName;
@@ -40,7 +36,8 @@ public class Book {
     public double getPrice() {
         return price;
     }
-    public void setPrice(double price) {
+    public double setPrice(double price) {
         this.price = price;
+        return price;
     }
 }

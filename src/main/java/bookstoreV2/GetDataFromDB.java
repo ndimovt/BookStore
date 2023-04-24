@@ -37,8 +37,7 @@ public class GetDataFromDB {
             }
         }
     }
-    protected Book bookInfo(String authorName)throws SQLException, InputMismatchException {
-        Book book = null;
+    protected ArrayList<Book> bookInfo() throws SQLException{
             Connection c = null;
             PreparedStatement pst = null;
             ResultSet rs = null;
@@ -47,16 +46,13 @@ public class GetDataFromDB {
                 pst = c.prepareStatement("""
                         SELECT bf.book_title, bf.release_year,bf.price
                         FROM book_info bf
-                        WHERE bf.author_name = ?
                         """);
-                pst.setString(1,authorName);
                 rs = pst.executeQuery();
                 while (rs.next()) {
-                    book = new Book(rs.getString("book_title"),rs.getInt("release_year"), rs.getDouble("price"));
-                    System.out.println(book);
+                    Book book = new Book(rs.getString("book_title"),rs.getInt("release_year"), rs.getDouble("price"));
+                    bookData.add(book);
                 }
-
-            } finally {
+            }finally{
                 if (c != null) {
                     c.close();
                 }
@@ -67,38 +63,36 @@ public class GetDataFromDB {
                     rs.close();
                 }
         }
-        return book;
-    }
-    protected ArrayList<Book> addBook (Book b){
-        bookData.add(b);
         return bookData;
     }
-    protected Book changeBookPrice (String bName, double newPrice){
-        for (Book b : bookData) {
-            if (b.getBookName().equals(bName)){
-                b.setPrice(newPrice);
-                return b;
-            }
+    protected void showInfo(){
+        for(Book b : bookData){
+            System.out.println(b.toString());
         }
-        return null;
     }
-    protected void addChangedBookToDB(String bookTitle)throws SQLException{
-        Connection DBCon = null;
-        PreparedStatement pst = null;
-        try{
-            DBCon = this.getConnection();
-            pst = DBCon.prepareStatement("UPDATE book_info SET price = ? WHERE book_title = ?");
-            for(Book b : bookData) {
-                pst.setDouble(1, b.getPrice());
-                pst.setString(2,bookTitle);
-                pst.executeUpdate();
-            }
-        }finally {
-            if(DBCon != null){
-                DBCon.close();
-            }if(pst != null){
-                pst.close();
+    protected ArrayList<Book> addChangedBookToDB(String bookTitle, double updatedPrice)throws SQLException {
+        for (Book changedBook : bookData) {
+            if (bookTitle.equals(changedBook.getBookName())) {
+                Connection DBCon = null;
+                PreparedStatement pst = null;
+                try {
+                    DBCon = this.getConnection();
+                    pst = DBCon.prepareStatement("UPDATE book_info SET price = ? WHERE book_title = ?");
+                    pst.setDouble(1,changedBook.setPrice(updatedPrice));
+                    pst.setString(2,bookTitle);
+                    pst.executeUpdate();
+                } finally {
+                    if (DBCon != null) {
+                        DBCon.close();
+                    }
+                    if (pst != null) {
+                        pst.close();
+                    }
+                }
+            }else {
+                System.out.println("Book "+bookTitle+" does not exist in Database");
             }
         }
+        return bookData;
     }
 }
