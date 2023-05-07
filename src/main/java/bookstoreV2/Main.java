@@ -7,8 +7,8 @@ public class Main {
         try {
             gd.bookInfo();
             gd.showInfo();
-            //gd.addChangedBookToDB("Whirlwind",16.32);
-            //gd.showInfo();
+            gd.addChangedBookToDB("Sea Wolf",10.12);
+            gd.showInfo();
         } catch (SQLException e) {
             e.printStackTrace();
         }
