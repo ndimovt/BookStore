@@ -104,7 +104,6 @@ public class GetDataFromDB {
             }
         } catch (SQLException E) {
             System.out.println("No con");
-            E.printStackTrace();
         }
     }
 }
