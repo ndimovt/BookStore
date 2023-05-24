@@ -7,7 +7,7 @@ public class Book {
     private double price;
     @Override
     public String toString() {
-        return "BookName: " + bookName + ", Year of release: " + year + ", Price: " + price;
+        return "AuthorName: " + authorName + "BookName: " + bookName + ", Year of release: " + year + ", Price: " + price;
     }
     public Book(String bookName, int year, double price) {
         this.bookName = bookName;
