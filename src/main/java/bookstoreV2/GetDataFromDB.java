@@ -8,19 +8,16 @@ public class GetDataFromDB {
 
     private GetDataFromDB() {
     }
-
     public static GetDataFromDB getInstance() {
         if (gdfDB == null) {
             gdfDB = new GetDataFromDB();
         }
         return gdfDB;
     }
-
     private static Connection getConnection() throws SQLException {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bookstore", "root", "sheeuser123456@");
         return con;
     }
-
     protected void addBookToDB(String bName, String aName, int year, double bookPrice) throws SQLException, InputMismatchException {
         Connection DBconnection = null;
         PreparedStatement ps = null;
@@ -33,12 +30,7 @@ public class GetDataFromDB {
             ps.setDouble(4, bookPrice);
             ps.executeUpdate();
         } finally {
-            if (DBconnection != null) {
-                DBconnection.close();
-            }
-            if (ps != null) {
-                ps.close();
-            }
+            closeConnection(DBconnection,ps,null);
         }
     }
     protected ArrayList<Book> bookInfo(){
@@ -70,7 +62,6 @@ public class GetDataFromDB {
             System.out.println(b.toString());
         }
     }
-
     protected ArrayList<Book> addChangedBookToDB(String bookTitle, double updatedPrice) throws SQLException {
         ArrayList<Book> bookData = bookInfo();
         for (Book changedBook : bookData) {
@@ -90,7 +81,6 @@ public class GetDataFromDB {
         }
         return bookData;
     }
-
     private void closeConnection(Connection con, PreparedStatement pst, ResultSet re) {
         try {
             if (con != null) {
