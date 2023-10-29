@@ -23,7 +23,7 @@ public class GetDataFromDB {
         PreparedStatement ps = null;
         try {
             DBconnection = this.getConnection();
-            ps = DBconnection.prepareStatement("INSERT INTO book_info(author_name,book_title,release_year,price) VALUES (?,?,?,?)");
+            ps = DBconnection.prepareStatement("call bookstore.add_book(?,?,?,?)");
             ps.setString(1, aName);
             ps.setString(2, bName);
             ps.setInt(3, year);
@@ -40,13 +40,10 @@ public class GetDataFromDB {
         ResultSet rs = null;
         try {
             c = this.getConnection();
-            pst = c.prepareStatement("""
-                    SELECT bf.book_title, bf.release_year,bf.price
-                    FROM book_info bf
-                    """);
+            pst = c.prepareStatement(" call bookstore.get_info()");
             rs = pst.executeQuery();
             while (rs.next()) {
-                Book book = new Book(rs.getString("book_title"), rs.getInt("release_year"), rs.getDouble("price"));
+                Book book = new Book(rs.getString("author_name"), rs.getString("book_title"), rs.getInt("release_year"), rs.getDouble("price"));
                 bookData.add(book);
             }
         } catch (SQLException SE){
@@ -70,9 +67,9 @@ public class GetDataFromDB {
                 PreparedStatement pst = null;
                 try {
                     DBCon = this.getConnection();
-                    pst = DBCon.prepareStatement("UPDATE book_info SET price = ? WHERE book_title = ?");
-                    pst.setDouble(1, changedBook.setPrice(updatedPrice));
-                    pst.setString(2, bookTitle);
+                    pst = DBCon.prepareStatement("call bookstore.change_price(?,?)");
+                    pst.setString(1, bookTitle);
+                    pst.setDouble(2, changedBook.setPrice(updatedPrice));
                     pst.executeUpdate();
                 } finally {
                     closeConnection(DBCon,pst,null);
@@ -93,7 +90,7 @@ public class GetDataFromDB {
                 re.close();
             }
         } catch (SQLException E) {
-            System.out.println("No con");
+            System.out.println("No connection");
         }
     }
 }
