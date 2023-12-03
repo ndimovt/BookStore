@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 public class GetDataFromDB {
+    private static Connection con;
     private static GetDataFromDB gdfDB;
 
     private GetDataFromDB() {
@@ -14,11 +15,16 @@ public class GetDataFromDB {
         }
         return gdfDB;
     }
-    private static Connection getConnection() throws SQLException {
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bookstore", "root", "sheeuser123456@");
+    private static Connection getConnection(){
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bookstore", "root", "sheeuser123456@");
+        }catch (SQLException e){
+            System.out.println("Connection error!");
+            e.printStackTrace();
+        }
         return con;
     }
-    protected void addBookToDB(String bName, String aName, int year, double bookPrice) throws SQLException, InputMismatchException {
+    protected void addBookToDB(String bName, String aName, int year, double bookPrice){
         Connection DBconnection = null;
         PreparedStatement ps = null;
         try {
@@ -29,7 +35,13 @@ public class GetDataFromDB {
             ps.setInt(3, year);
             ps.setDouble(4, bookPrice);
             ps.executeUpdate();
-        } finally {
+        } catch (SQLException sqe){
+            System.out.println("Connection error!");
+            sqe.printStackTrace();
+        }catch (InputMismatchException imme){
+            System.out.println("Wrong value entered");
+            imme.printStackTrace();
+        }finally {
             closeConnection(DBconnection,ps,null);
         }
     }
@@ -59,7 +71,7 @@ public class GetDataFromDB {
             System.out.println(b.toString());
         }
     }
-    protected ArrayList<Book> addChangedBookToDB(String bookTitle, double updatedPrice) throws SQLException {
+    protected ArrayList<Book> addChangedBookToDB(String bookTitle, double updatedPrice){
         ArrayList<Book> bookData = bookInfo();
         for (Book changedBook : bookData) {
             if (bookTitle.equals(changedBook.getBookName())) {
@@ -71,7 +83,10 @@ public class GetDataFromDB {
                     pst.setString(1, bookTitle);
                     pst.setDouble(2, changedBook.setPrice(updatedPrice));
                     pst.executeUpdate();
-                } finally {
+                }catch (SQLException sqe){
+                    System.out.println("Connection error!");
+                    sqe.printStackTrace();
+                }finally {
                     closeConnection(DBCon,pst,null);
                 }
             }

@@ -20,7 +20,13 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>8.2.0</version>
         </dependency>
-
     </dependencies>
+    <developers>
+        <developer>
+            <id>ndimovt</id>
+            <name>Nikolay Dimov</name>
+            <roles><role>Java Developer</role></roles>
+        </developer>
+    </developers>
 
 </project>

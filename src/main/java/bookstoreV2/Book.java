@@ -19,24 +19,6 @@ public class Book {
     public String getBookName() {
         return bookName;
     }
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
-    }
-    public String getAuthorName() {
-        return authorName;
-    }
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
-    public int getYear() {
-        return year;
-    }
-    public void setYear(int year) {
-        this.year = year;
-    }
-    public double getPrice() {
-        return price;
-    }
     public double setPrice(double price) {
         this.price = price;
         return price;
